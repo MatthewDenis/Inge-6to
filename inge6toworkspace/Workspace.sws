@@ -4,7 +4,7 @@
 
 <Workspace>
 	<Local Expanded="Yes">
-		<Model Expanded="Yes" ID="{1FC0D713-906B-4A8E-8135-91198C0662A0}" Name="inge6toworkspace" Selected="Yes" Type="{FF4B6538-9856-42CF-B9B9-304ED370CEAA}" URL="inge6toworkspace.prj"/>
+		<Model Expanded="Yes" ID="{1FC0D713-906B-4A8E-8135-91198C0662A0}" Loaded="No" Name="inge6toworkspace" Type="{FF4B6538-9856-42CF-B9B9-304ED370CEAA}" URL="inge6toworkspace.prj"/>
 	</Local>
 	<BrowserModule Name="Repository"/>
 </Workspace>
