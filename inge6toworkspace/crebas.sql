@@ -1,6 +1,6 @@
 /*==============================================================*/
 /* DBMS name:      Sybase SQL Anywhere 11                       */
-/* Created on:     11/19/2022 4:35:59 PM                        */
+/* Created on:     11/20/2022 3:51:23 AM                        */
 /*==============================================================*/
 
 
@@ -72,6 +72,11 @@ end if;
 if exists(select 1 from sys.sysforeignkey where role='FK_DIAS_DET_REFERENCE_PROFESOR') then
     alter table DIAS_DETALLES
        delete foreign key FK_DIAS_DET_REFERENCE_PROFESOR
+end if;
+
+if exists(select 1 from sys.sysforeignkey where role='FK_DIAS_DET_REFERENCE_EMPLEADO') then
+    alter table DIAS_DETALLES_EMPLEADO
+       delete foreign key FK_DIAS_DET_REFERENCE_EMPLEADO
 end if;
 
 if exists(select 1 from sys.sysforeignkey where role='FK_EMPLEADO_REFERENCE_PERSONAS') then
@@ -237,6 +242,14 @@ end if;
 
 if exists(
    select 1 from sys.systable 
+   where table_name='DIAS_DETALLES_EMPLEADO'
+     and table_type in ('BASE', 'GBL TEMP')
+) then
+    drop table DIAS_DETALLES_EMPLEADO
+end if;
+
+if exists(
+   select 1 from sys.systable 
    where table_name='EMPLEADOS'
      and table_type in ('BASE', 'GBL TEMP')
 ) then
@@ -358,7 +371,7 @@ create table ALUMNOS
 (
    ID                   integer                        not null,
    ID_PERSONA           integer                        not null,
-   MATRICULA            varchar                        not null,
+   MATRICULA            varchar(60)                    not null,
    FECHA_CREACION       datetime                       not null,
    FECHA_MODIFICACION   datetime                       null,
    FECHA_ELIMINACION    datetime                       null,
@@ -399,7 +412,7 @@ create table ASISTENCIA_ALUMNO_CLASE
 (
    ID_ALUMNO            integer                        not null,
    ID_CLASE_FECHA       integer                        not null,
-   ATENDIO              varchar                        null,
+   ATENDIO              varchar(60)                    null,
    FECHA_CREACION       datetime                       not null,
    FECHA_MODIFICACION   datetime                       null,
    FECHA_ELIMINACION    datetime                       null,
@@ -414,7 +427,7 @@ create table AULAS
    ID                   integer                        not null,
    CAPACIDAD            integer                        null,
    ID_ADMINISTRATIVO    integer                        null,
-   NOMBRE               varchar                        null,
+   NOMBRE               varchar(60)                    null,
    FECHA_CREACION       datetime                       not null,
    FECHA_MODIFICACION   datetime                       null,
    FECHA_ELIMINACION    datetime                       null,
@@ -451,7 +464,7 @@ create table CERTIFICADO
 create table CLASES 
 (
    ID                   integer                        not null,
-   NOMBRE               varchar                        not null,
+   NOMBRE               varchar(60)                    not null,
    DURACION             integer                        not null,
    CURSO                integer                        not null,
    EDAD_MINIMA          integer                        not null,
@@ -486,8 +499,8 @@ create table DEUDOR
 (
    ID                   integer                        not null,
    ID_PERSONA           integer                        not null,
-   RUC                  varchar                        not null,
-   NUMERO_DE_CONTACTO   varchar                        not null,
+   RUC                  varchar(60)                    not null,
+   NUMERO_DE_CONTACTO   varchar(60)                    not null,
    FECHA_CREACION       datetime                       not null,
    FECHA_MODIFICACION   datetime                       null,
    FECHA_ELIMINACION    datetime                       null,
@@ -511,6 +524,21 @@ create table DIAS_DETALLES
 );
 
 /*==============================================================*/
+/* Table: DIAS_DETALLES_EMPLEADO                                */
+/*==============================================================*/
+create table DIAS_DETALLES_EMPLEADO 
+(
+   ID                   integer                        null,
+   ID_EMPLEADO          integer                        not null,
+   DIA                  date                           not null,
+   ENTRADA              time                           not null,
+   SALIDA               time                           not null,
+   FECHA_MODIFICACION   datetime                       null,
+   FECHA_CREACION       datetime                       not null,
+   FECHA_ELIMINACION    datetime                       null
+);
+
+/*==============================================================*/
 /* Table: EMPLEADOS                                             */
 /*==============================================================*/
 create table EMPLEADOS 
@@ -531,9 +559,9 @@ create table EVENTOS
 (
    ID                   integer                        not null,
    ID_ADMINISTRATIVO    integer                        not null,
-   NOMBRE               varchar                        not null,
+   NOMBRE               varchar(60)                    not null,
    EDAD_MINIMO          integer                        not null,
-   PREDIO               varchar                        not null,
+   PREDIO               varchar(60)                    not null,
    FECHA_CREACION       datetime                       not null,
    FECHA_MODIFICACION   datetime                       null,
    FECHA_ELIMINACION    datetime                       null,
@@ -546,7 +574,7 @@ create table EVENTOS
 create table EXAMENES 
 (
    ID                   integer                        not null,
-   NOMBRE               varchar                        null,
+   NOMBRE               varchar(60)                    null,
    FECHA_CREACION       datetime                       not null,
    PROFESOR             integer                        null,
    constraint PK_EXAMENES primary key clustered (ID)
@@ -609,7 +637,7 @@ create table PAGOS_DETALLES
    ID                   integer                        not null,
    ID_CLASE             integer                        null,
    ID_EVENTO            integer                        null,
-   MES                  varchar                        null,
+   MES                  varchar(60)                    null,
    MONTO                numeric(15)                    not null,
    DESCUENTO            numeric(15)                    not null,
    FECHA_ELIMINACION    datetime                       null,
@@ -624,12 +652,12 @@ create table PAGOS_DETALLES
 create table PERSONAS 
 (
    ID                   integer                        not null,
-   NOMBRE               varchar                        not null,
-   APELLIDO             varchar                        not null,
+   NOMBRE               varchar(60)                    not null,
+   APELLIDO             varchar(60)                    not null,
    FECHA_NACIMIENTO     datetime                       not null,
-   DIRECCION            varchar                        not null,
-   NUMERO_DE_CONTACTO   varchar                        not null,
-   DIRECCION_DE_CORREO  varchar                        not null,
+   DIRECCION            varchar(60)                    not null,
+   NUMERO_DE_CONTACTO   varchar(60)                    not null,
+   DIRECCION_DE_CORREO  varchar(60)                    not null,
    FECHA_CREACION       datetime                       not null,
    FECHA_MODIFICACION   datetime                       null,
    FECHA_ELIMINACION    datetime                       null,
@@ -770,6 +798,12 @@ alter table DEUDOR
 alter table DIAS_DETALLES
    add constraint FK_DIAS_DET_REFERENCE_PROFESOR foreign key (ID_PROFESOR)
       references PROFESORES (ID)
+      on update restrict
+      on delete restrict;
+
+alter table DIAS_DETALLES_EMPLEADO
+   add constraint FK_DIAS_DET_REFERENCE_EMPLEADO foreign key (ID_EMPLEADO)
+      references EMPLEADOS (ID)
       on update restrict
       on delete restrict;
 

@@ -1,0 +1,8 @@
+Save Format v3.0(19990112)
+@begin Unchecked
+@end;
+@begin Targets
+ 0 "inge6to.pbt";
+@end;
+DefaultTarget "inge6to.pbt";
+DefaultRemoteTarget "inge6to.pbt";
